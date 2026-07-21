@@ -10,7 +10,7 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-    theme: 'dark',
+    theme: 'light',
     toggleTheme: () => { },
 });
 
@@ -19,7 +19,7 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }: { children: ReactNode }) {
-    const [theme, setTheme] = useState<Theme>('dark');
+    const [theme, setTheme] = useState<Theme>('light');
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -30,10 +30,8 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
             setTheme(stored);
             document.documentElement.setAttribute('data-theme', stored);
         } else {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const initial: Theme = prefersDark ? 'dark' : 'light';
-            setTheme(initial);
-            document.documentElement.setAttribute('data-theme', initial);
+            setTheme('light');
+            document.documentElement.setAttribute('data-theme', 'light');
         }
     }, []);
 

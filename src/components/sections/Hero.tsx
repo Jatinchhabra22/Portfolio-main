@@ -196,7 +196,7 @@ function ProfileCard({ isDark }: { isDark: boolean }) {
       </div>
 
       {/* Right floating tags — sit in their own column, never over the card */}
-      <div className="hidden xl:flex flex-col justify-between items-start shrink-0 py-16 w-max">
+      <div className="hidden xl:flex flex-col justify-between items-start shrink-0 py-16 w-max -translate-x-3">
         {floatingTagsRight.map((label, i) => renderFloatingTag(label, i + 3, 'right'))}
       </div>
     </div>
