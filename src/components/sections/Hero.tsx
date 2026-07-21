@@ -1,182 +1,329 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { ChevronDown, BarChart3, Database, PieChart, Activity, Eye, Download } from 'lucide-react';
-import { useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { Download, Eye, MapPin, Github, Linkedin, Mail, ArrowRight, ChevronDown } from 'lucide-react';
+import { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import ResumeViewer from '@/components/ResumeViewer';
+import { useTheme } from '@/components/ThemeProvider';
 
-export default function Hero() {
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
+const coreSkills = ['Python', 'Data Science', 'Data Engineering', 'Data Analytics', 'SQL', 'Deep Learning', 'Generative AI', 'Machine Learning', 'LLMs', 'NLP'];
 
-  const scrollToProjects = () => {
-    const element = document.getElementById('projects');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+const floatingTags = [
+  { label: 'Data Science', side: 'left', top: '12%' },
+  { label: 'Data Engineering', side: 'right', top: '25%' },
+  { label: 'AI / ML', side: 'left', top: '44%' },
+  { label: 'Analytics', side: 'right', top: '58%' },
+  { label: 'Deep Learning', side: 'left', top: '72%' },
+  { label: 'Generative AI', side: 'right', top: '85%' },
+];
 
-  const dataIcons = [
-    { icon: <BarChart3 className="w-5 h-5" />, delay: 0.1, position: "top-[20%] left-[10%]" },
-    { icon: <Database className="w-5 h-5" />, delay: 0.3, position: "top-[60%] left-[15%]" },
-    { icon: <PieChart className="w-5 h-5" />, delay: 0.5, position: "top-[25%] right-[15%]" },
-    { icon: <Activity className="w-5 h-5" />, delay: 0.7, position: "top-[70%] right-[10%]" },
-  ];
+function ProfileCard({ isDark }: { isDark: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const rx = useSpring(useTransform(my, [-200, 200], [4, -4]), { stiffness: 90, damping: 28 });
+  const ry = useSpring(useTransform(mx, [-200, 200], [-4, 4]), { stiffness: 90, damping: 28 });
 
-  const staticLines = [
-    { width: "w-[300px]", top: "top-[15%]", left: "left-[-5%]", rotate: "rotate-[15deg]" },
-    { width: "w-[400px]", bottom: "bottom-[20%]", right: "right-[-10%]", rotate: "rotate-[-10deg]" },
-    { width: "w-[200px]", top: "top-[60%]", left: "left-[5%]", rotate: "rotate-[45deg]" },
-  ];
+  const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    mx.set(e.clientX - r.left - r.width / 2);
+    my.set(e.clientY - r.top - r.height / 2);
+  }, [mx, my]);
+  const onLeave = useCallback(() => { mx.set(0); my.set(0); }, [mx, my]);
 
-  const staticNodes = [
-    { top: "12%", left: "18%", size: "w-1.5 h-1.5" },
-    { top: "45%", left: "8%", size: "w-1 h-1" },
-    { bottom: "25%", left: "20%", size: "w-2 h-2" },
-    { top: "18%", right: "22%", size: "w-1 h-1" },
-    { top: "55%", right: "12%", size: "w-1.5 h-1.5" },
-    { bottom: "15%", right: "25%", size: "w-2.5 h-2.5" },
-  ];
+  const accent = isDark ? '#86efac' : '#111111';
+  const cardBg = isDark ? 'rgba(18,18,18,0.97)' : 'rgba(255,255,255,0.96)';
+  const cardBd = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.09)';
+  const cardSh = isDark ? '0 28px 70px rgba(0,0,0,0.70)' : '0 20px 60px rgba(0,0,0,0.10)';
+  const nameFg = isDark ? '#f0f0f0' : '#0f0f0f';
+  const subFg = isDark ? 'rgba(240,240,240,0.42)' : '#666666';
+  const divider = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)';
+  const statLbl = isDark ? 'rgba(240,240,240,0.28)' : '#aaaaaa';
+  const metaFg = isDark ? 'rgba(240,240,240,0.28)' : '#aaaaaa';
+  const skillBg = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+  const skillBd = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.09)';
+  const skillFg = isDark ? 'rgba(240,240,240,0.55)' : '#444444';
+  const photoBd = isDark ? '3px solid #111111' : '3px solid #f2ede8';
+  const tagBg = isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)';
+  const tagBd = isDark ? 'rgba(134,239,172,0.25)' : 'rgba(0,0,0,0.12)';
+  const tagSh = isDark ? '0 4px 16px rgba(0,0,0,0.4)' : '0 4px 16px rgba(0,0,0,0.08)';
+  const bannerBg = isDark
+    ? 'linear-gradient(135deg,#0c1410 0%,#111c14 50%,#111111 100%)'
+    : 'linear-gradient(135deg,#e4e0db 0%,#ede9e3 60%,#f0ece8 100%)';
+  const pulseDotColor = isDark ? '#4ade80' : '#111111';
 
   return (
-    <section id="home" className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
-      {/* Subtle Grid Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
-      
-      {/* Static Decorative Lines */}
-      {staticLines.map((line, i) => (
-        <div 
-          key={`line-${i}`} 
-          className={`absolute ${line.width} h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent ${line.top || ""} ${line.bottom || ""} ${line.left || ""} ${line.right || ""} ${line.rotate} pointer-events-none hidden lg:block`} 
+    <div className="relative w-full max-w-[600px] mx-auto" style={{ perspective: '1200px' }}>
+      <motion.div ref={ref}
+        style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
+        onMouseMove={onMove} onMouseLeave={onLeave}
+        className="relative">
+
+        {/* Subtle accent border */}
+        <div className="absolute -inset-[1px] rounded-[22px] pointer-events-none"
+          style={{ background: `linear-gradient(135deg,${accent}28,${accent}08,${accent}22)` }}
         />
-      ))}
 
-      {/* Static Decorative Nodes */}
-      {staticNodes.map((node, i) => (
-        <div 
-          key={`node-${i}`} 
-          className={`absolute ${node.size} bg-white/10 rounded-full ${node.top || ""} ${node.bottom || ""} ${node.left || ""} ${node.right || ""} pointer-events-none hidden lg:block`} 
-        />
-      ))}
-
-      {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] animate-glow pointer-events-none" />
-      
-      {/* Floating Data Icons */}
-      {dataIcons.map((item, i) => (
+        {/* Main card */}
         <motion.div
-          key={i}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: [0, 0.3, 0], scale: [0.8, 1, 0.8], y: [0, -20, 0] }}
-          transition={{ duration: 4, delay: item.delay, repeat: Infinity, ease: "easeInOut" }}
-          className={`absolute ${item.position} p-3 rounded-2xl bg-white/[0.03] border border-white/5 backdrop-blur-sm hidden md:block`}
-        >
-          {item.icon}
-        </motion.div>
-      ))}
+          initial={{ opacity: 0, y: 40, scale: 0.94 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="relative rounded-[21px] overflow-hidden"
+          style={{ background: cardBg, border: `1px solid ${cardBd}`, boxShadow: cardSh, transform: 'translateZ(16px)' }}>
 
-      <div className="container mx-auto px-6 relative z-10 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-4"
-        >
-          <span className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-sm font-medium tracking-wider uppercase">
-            Available for New Opportunities
-          </span>
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-[0.9] tracking-tighter"
-        >
-          <motion.span
-            animate={{ 
-              textShadow: ["0 0 20px rgba(139, 92, 246, 0)", "0 0 20px rgba(139, 92, 246, 0.3)", "0 0 20px rgba(139, 92, 246, 0)"] 
-            }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          >
-            JATIN
-          </motion.span>
-          <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent relative">
-            CHHABRA
-            <motion.span 
-              className="absolute -inset-x-4 -inset-y-2 bg-primary/10 blur-3xl -z-10 rounded-full"
-              animate={{ opacity: [0.2, 0.5, 0.2], scale: [1, 1.1, 1] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          {/* Banner */}
+          <div className="h-32 relative overflow-hidden">
+            <div className="absolute inset-0" style={{ background: bannerBg }} />
+            <div className="absolute inset-0"
+              style={{
+                backgroundImage: `linear-gradient(${accent}18 1px,transparent 1px),linear-gradient(90deg,${accent}18 1px,transparent 1px)`,
+                backgroundSize: '28px 28px', opacity: 0.6,
+              }}
             />
-          </span>
-        </motion.h1>
+            <div className="absolute left-0 right-0 h-[1px] animate-scan"
+              style={{ background: `linear-gradient(90deg,transparent,${accent}55,transparent)` }}
+            />
+          </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-2xl mx-auto text-lg md:text-xl text-white/60 mb-12 leading-relaxed"
-        >
-          Motivated aspiring <span className="text-white font-bold">Data Scientist & Analyst</span> focused on 
-          turning complex datasets into actionable business decisions with high-end precision.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-wrap items-center justify-center gap-4"
-        >
-          <button 
-            onClick={scrollToProjects}
-            className="group px-8 py-4 bg-white text-background rounded-full font-bold hover:bg-white/90 transition-all active:scale-95 flex items-center gap-2"
-          >
-            View Projects
+          {/* Photo */}
+          <div className="px-7 -mt-16 pb-2">
             <motion.div
-              animate={{ x: [0, 4, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <ChevronDown className="w-4 h-4" />
+              className="w-36 h-36 rounded-2xl overflow-hidden relative"
+              style={{ border: photoBd }}
+              animate={{ boxShadow: [`0 0 0 2px ${accent}22`, `0 0 0 5px ${accent}38`, `0 0 0 2px ${accent}22`] }}
+              transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}>
+              <Image
+                src="/photo.jpeg" alt="Jatin Chhabra" fill
+                className="object-cover object-top" sizes="144px" priority
+                onError={e => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  img.style.display = 'none';
+                  const p = img.parentElement;
+                  if (p && !p.querySelector('.jc-fb')) {
+                    const fb = document.createElement('div');
+                    fb.className = 'jc-fb';
+                    Object.assign(fb.style, {
+                      width: '100%', height: '100%', display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', background: isDark ? '#0c1410' : '#d1fae5',
+                      fontSize: '2rem', fontWeight: '900', color: accent,
+                      fontFamily: 'DM Sans,system-ui,sans-serif',
+                    });
+                    fb.textContent = 'JC';
+                    p.appendChild(fb);
+                  }
+                }}
+              />
             </motion.div>
-          </button>
-          
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setIsResumeOpen(true)}
-              className="px-6 py-4 bg-transparent border border-white/20 text-white rounded-full font-bold hover:bg-white/10 transition-all active:scale-95 backdrop-blur-sm flex items-center gap-2"
-            >
-              <Eye className="w-4 h-4" />
-              View Resume
-            </button>
-            <a 
-              href="/resume.pdf" 
-              download
-              className="p-4 bg-white/5 border border-white/10 text-white rounded-full hover:bg-white/10 transition-all active:scale-95 backdrop-blur-sm"
-              title="Download Resume"
-            >
-              <Download className="w-5 h-5" />
-            </a>
+          </div>
+
+          {/* Name */}
+          <div className="px-7 pt-2 pb-5">
+            <h3 className="text-xl font-bold tracking-tight" style={{ color: nameFg }}>Jatin Chhabra</h3>
+            <p className="text-sm mt-1 font-medium" style={{ color: subFg }}>AI Engineer · Data Scientist · Data Engineer</p>
+            <div className="flex items-center gap-2 mt-3">
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: pulseDotColor }} />
+              <span className="text-xs font-medium" style={{ color: accent }}>Available for Opportunities</span>
+            </div>
+          </div>
+
+          <div className="mx-7 h-px" style={{ background: divider }} />
+
+          {/* Stats */}
+          <div className="px-7 py-5 grid grid-cols-3">
+            {[{ l: 'Projects', v: '10+' }, { l: 'Internships', v: '3' }, { l: 'Technologies', v: '25+' }].map(s => (
+              <div key={s.l} className="text-center">
+                <div className="text-2xl font-black" style={{ color: accent }}>{s.v}</div>
+                <div className="text-[10px] font-medium mt-1 uppercase tracking-wider" style={{ color: statLbl }}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mx-7 h-px" style={{ background: divider }} />
+
+          {/* Skills */}
+          <div className="px-7 py-5">
+            <div className="text-[9px] font-semibold tracking-[0.22em] uppercase mb-3" style={{ color: metaFg }}>Core Skills</div>
+            <div className="flex flex-wrap gap-2">
+              {coreSkills.map(t => (
+                <span key={t} className="px-3 py-1 rounded-full text-xs font-medium"
+                  style={{ background: skillBg, border: `1px solid ${skillBd}`, color: skillFg }}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="px-7 pb-6">
+            <div className="flex items-center gap-2 text-xs" style={{ color: metaFg }}>
+              <MapPin className="w-3 h-3" />
+              India · B.Tech CSE (Data Science) ·{' '}
+              <span style={{ color: accent, fontWeight: 700 }}>9.1 CGPA</span>
+            </div>
           </div>
         </motion.div>
+
+        {/* Floating skill tags */}
+        {floatingTags.map((tag, i) => (
+          <motion.div key={tag.label}
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 1 + i * 0.15 }}
+            className="absolute hidden xl:flex items-center pointer-events-none"
+            style={{
+              top: tag.top,
+              left: tag.side === 'left' ? '-22%' : undefined,
+              right: tag.side === 'right' ? '-24%' : undefined,
+              animation: `float ${4 + i * 0.4}s ease-in-out infinite`,
+              animationDelay: `${i * 0.2}s`,
+            }}>
+            <span className="px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap"
+              style={{
+                background: tagBg,
+                border: `1px solid ${tagBd}`,
+                color: accent,
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                boxShadow: tagSh,
+              }}>
+              {tag.label}
+            </span>
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+export default function Hero() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
+
+  const accent = isDark ? '#86efac' : '#111111';
+  const fg = isDark ? '#f0f0f0' : '#0f0f0f';
+  const fgSub = isDark ? 'rgba(240,240,240,0.52)' : '#444444';
+  const fgFaint = isDark ? 'rgba(240,240,240,0.35)' : '#888888';
+  const btnBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  const btnBd = isDark ? 'rgba(255,255,255,0.11)' : 'rgba(0,0,0,0.11)';
+  const pulseDotColor = isDark ? '#4ade80' : '#111111';
+
+  return (
+    <section id="home" className="relative min-h-screen w-full flex items-center overflow-hidden pt-20">
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-14 items-center min-h-[88vh] py-8">
+
+          {/* LEFT */}
+          <div className="flex flex-col gap-6 order-2 lg:order-1">
+
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+              <div className="inline-flex items-center gap-2 text-xs font-medium" style={{ color: fgFaint }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: pulseDotColor }} />
+                Available for new opportunities · India
+              </div>
+            </motion.div>
+
+            {/* Big name */}
+            <div>
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
+                className="text-sm font-medium tracking-[0.20em] uppercase mb-2" style={{ color: fgFaint }}>
+                Hi, I&apos;m
+              </motion.p>
+              <div className="overflow-hidden">
+                <motion.h1
+                  initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="leading-[0.88] font-black"
+                  style={{ fontSize: 'clamp(64px, 8vw, 108px)', letterSpacing: '-0.04em', color: fg }}>
+                  Jatin<br />
+                  <span style={{ color: accent }}>Chhabra</span>
+                </motion.h1>
+              </div>
+            </div>
+
+            <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-base md:text-lg leading-relaxed max-w-xl font-light" style={{ color: fgSub }}>
+              I build and ship intelligent systems combining{' '}
+              <span style={{ color: fg, fontWeight: 500 }}>AI, Machine Learning</span>,{' '}
+              <span style={{ color: fg, fontWeight: 500 }}>Data Engineering</span>,{' '}
+              <span style={{ color: fg, fontWeight: 500 }}>Generative AI</span> and{' '}
+              <span style={{ color: fg, fontWeight: 500 }}>LLMs</span> — turning raw data into scalable products and AI-driven applications that create real business impact.
+            </motion.p>
+
+            {/* Socials */}
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.42 }} className="flex items-center gap-3">
+              {[
+                { icon: Github, href: 'https://github.com/Jatinchhabra22', label: 'GitHub' },
+                { icon: Linkedin, href: 'https://www.linkedin.com/in/jatin-chhabra-2b0455289/', label: 'LinkedIn' },
+                { icon: Mail, href: 'mailto:jatin.chhabra22jc@gmail.com', label: 'Email' },
+              ].map(({ icon: Icon, href, label }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 hover:-translate-y-0.5"
+                  style={{ background: btnBg, border: `1px solid ${btnBd}`, color: fgFaint }}>
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
+            </motion.div>
+
+            {/* CTAs */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.52 }} className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+                className="group flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                style={{ background: accent, color: isDark ? '#0a0a0a' : '#ffffff', boxShadow: `0 4px 14px ${isDark ? 'rgba(134,239,172,0.25)' : 'rgba(0,0,0,0.20)'}` }}>
+                See my work
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+              <button onClick={() => setIsResumeOpen(true)}
+                className="flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium transition-all hover:scale-[1.02]"
+                style={{ background: btnBg, border: `1px solid ${btnBd}`, color: fgSub }}>
+                <Eye className="w-4 h-4" />Resume
+              </button>
+              <a href="/resume.pdf" download aria-label="Download Resume"
+                className="flex items-center justify-center w-10 h-10 rounded-lg transition-all hover:scale-[1.05]"
+                style={{ background: btnBg, border: `1px solid ${btnBd}`, color: fgFaint }}>
+                <Download className="w-4 h-4" />
+              </a>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.62 }}
+              className="flex items-center gap-10 pt-5 flex-wrap"
+              style={{ borderTop: '1px solid var(--border)' }}>
+              {[
+                { value: '10+', label: 'projects built' },
+                { value: '3', label: 'internships' },
+                { value: '25+', label: 'technologies' },
+              ].map(s => (
+                <div key={s.label}>
+                  <div className="text-2xl font-black" style={{ color: accent }}>{s.value}</div>
+                  <div className="text-xs font-medium mt-0.5" style={{ color: fgFaint }}>{s.label}</div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* RIGHT — Profile card */}
+          <div className="flex items-center justify-center order-1 lg:order-2 py-6 lg:py-0">
+            <ProfileCard isDark={isDark} />
+          </div>
+        </div>
       </div>
 
-      <ResumeViewer isOpen={isResumeOpen} onClose={() => setIsResumeOpen(false)} />
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <span className="text-xs uppercase tracking-[0.2em] text-white/30">Scroll</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ChevronDown className="w-5 h-5 text-white/30" />
-        </motion.div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1">
+        <span className="text-[9px] font-semibold tracking-[0.4em] uppercase" style={{ color: fgFaint }}>Scroll</span>
+        <div className="animate-bounce"><ChevronDown className="w-4 h-4" style={{ color: fgFaint }} /></div>
       </motion.div>
+
+      <ResumeViewer isOpen={isResumeOpen} onClose={() => setIsResumeOpen(false)} />
     </section>
   );
 }
