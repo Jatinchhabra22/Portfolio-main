@@ -9,14 +9,8 @@ import { useTheme } from '@/components/ThemeProvider';
 
 const coreSkills = ['Python', 'Data Science', 'Data Engineering', 'Data Analytics', 'SQL', 'Deep Learning', 'Generative AI', 'Machine Learning', 'LLMs', 'NLP'];
 
-const floatingTags = [
-  { label: 'Data Science', side: 'left', top: '12%' },
-  { label: 'Data Engineering', side: 'right', top: '25%' },
-  { label: 'AI / ML', side: 'left', top: '44%' },
-  { label: 'Analytics', side: 'right', top: '58%' },
-  { label: 'Deep Learning', side: 'left', top: '72%' },
-  { label: 'Generative AI', side: 'right', top: '85%' },
-];
+const floatingTagsLeft = ['Data Science', 'AI / ML', 'Deep Learning'];
+const floatingTagsRight = ['Data Engineering', 'Analytics', 'Generative AI'];
 
 function ProfileCard({ isDark }: { isDark: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -54,8 +48,41 @@ function ProfileCard({ isDark }: { isDark: boolean }) {
     : 'linear-gradient(135deg,#e4e0db 0%,#ede9e3 60%,#f0ece8 100%)';
   const pulseDotColor = isDark ? '#4ade80' : '#111111';
 
+  const renderFloatingTag = (label: string, i: number, align: 'left' | 'right') => (
+    <motion.div key={label}
+      initial={{ opacity: 0, scale: 0.7 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, delay: 1 + i * 0.15 }}
+      className="pointer-events-none shrink-0"
+      style={{ alignSelf: align === 'left' ? 'flex-end' : 'flex-start' }}>
+      <div
+        style={{
+          animation: `float ${4 + i * 0.4}s ease-in-out infinite`,
+          animationDelay: `${i * 0.2}s`,
+        }}>
+        <span className="px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap"
+          style={{
+            background: tagBg,
+            border: `1px solid ${tagBd}`,
+            color: accent,
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            boxShadow: tagSh,
+          }}>
+          {label}
+        </span>
+      </div>
+    </motion.div>
+  );
+
   return (
-    <div className="relative w-full max-w-[600px] mx-auto" style={{ perspective: '1200px' }}>
+    <div className="flex items-stretch justify-center gap-2 xl:gap-4 w-full mx-auto overflow-visible xl:-mx-24 2xl:-mx-16">
+      {/* Left floating tags — sit in their own column, never over the card */}
+      <div className="hidden xl:flex flex-col justify-between items-end shrink-0 py-16 w-max">
+        {floatingTagsLeft.map((label, i) => renderFloatingTag(label, i, 'left'))}
+      </div>
+
+      <div className="relative w-full max-w-[600px] shrink-0" style={{ perspective: '1200px' }}>
       <motion.div ref={ref}
         style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
         onMouseMove={onMove} onMouseLeave={onLeave}
@@ -165,35 +192,13 @@ function ProfileCard({ isDark }: { isDark: boolean }) {
             </div>
           </div>
         </motion.div>
-
-        {/* Floating skill tags */}
-        {floatingTags.map((tag, i) => (
-          <motion.div key={tag.label}
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, delay: 1 + i * 0.15 }}
-            className="absolute hidden xl:flex items-center pointer-events-none"
-            style={{
-              top: tag.top,
-              left: tag.side === 'left' ? '-22%' : undefined,
-              right: tag.side === 'right' ? '-24%' : undefined,
-              animation: `float ${4 + i * 0.4}s ease-in-out infinite`,
-              animationDelay: `${i * 0.2}s`,
-            }}>
-            <span className="px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap"
-              style={{
-                background: tagBg,
-                border: `1px solid ${tagBd}`,
-                color: accent,
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
-                boxShadow: tagSh,
-              }}>
-              {tag.label}
-            </span>
-          </motion.div>
-        ))}
       </motion.div>
+      </div>
+
+      {/* Right floating tags — sit in their own column, never over the card */}
+      <div className="hidden xl:flex flex-col justify-between items-start shrink-0 py-16 w-max">
+        {floatingTagsRight.map((label, i) => renderFloatingTag(label, i + 3, 'right'))}
+      </div>
     </div>
   );
 }
@@ -212,7 +217,7 @@ export default function Hero() {
   const pulseDotColor = isDark ? '#4ade80' : '#111111';
 
   return (
-    <section id="home" className="relative min-h-screen w-full flex items-center overflow-hidden pt-20">
+    <section id="home" className="relative min-h-screen w-full flex items-center overflow-x-clip overflow-y-visible pt-20">
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-14 items-center min-h-[88vh] py-8">
 
@@ -311,7 +316,7 @@ export default function Hero() {
           </div>
 
           {/* RIGHT — Profile card */}
-          <div className="flex items-center justify-center order-1 lg:order-2 py-6 lg:py-0">
+          <div className="flex items-center justify-center order-1 lg:order-2 py-6 lg:py-0 overflow-visible">
             <ProfileCard isDark={isDark} />
           </div>
         </div>
