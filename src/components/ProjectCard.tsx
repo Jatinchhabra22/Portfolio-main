@@ -2,8 +2,9 @@
 
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useCallback } from 'react';
-import { Github, ChevronRight, ChevronLeft, ArrowUpRight, ExternalLink, Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Github, ChevronRight, ChevronLeft, ArrowUpRight, ExternalLink, Play, Pause, Volume2, VolumeX, Maximize2 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useTheme } from '@/components/ThemeProvider';
 
 export interface Project {
@@ -87,11 +88,12 @@ function ProjectGallery({ images }: { images: string[] }) {
   );
 }
 
-function ProjectVideo({ src }: { src: string }) {
+function ProjectVideo({ src, id }: { src: string; id: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
   const [showControls, setShowControls] = useState(false);
+  const router = useRouter();
 
   const togglePlay = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -108,6 +110,11 @@ function ProjectVideo({ src }: { src: string }) {
     v.muted = !v.muted;
     setMuted(v.muted);
   }, []);
+
+  const openFullscreen = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/video/${id}`);
+  }, [id, router]);
 
   return (
     <div
@@ -131,7 +138,7 @@ function ProjectVideo({ src }: { src: string }) {
       {/* Overlay gradient */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
-      {/* Centre play/pause button — always visible when paused, fades out when playing */}
+      {/* Centre play/pause button */}
       <AnimatePresence>
         {(!playing || showControls) && (
           <motion.button
@@ -156,7 +163,7 @@ function ProjectVideo({ src }: { src: string }) {
         )}
       </AnimatePresence>
 
-      {/* Bottom controls bar */}
+      {/* Bottom-right controls */}
       <AnimatePresence>
         {showControls && (
           <motion.div
@@ -186,6 +193,25 @@ function ProjectVideo({ src }: { src: string }) {
               {playing ? '▶ Playing' : '⏸ Paused'}
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fullscreen button — top-right corner */}
+      <AnimatePresence>
+        {showControls && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.18 }}
+            onClick={openFullscreen}
+            aria-label="View fullscreen"
+            className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg backdrop-blur-md transition-all hover:scale-105"
+            style={{ background: 'rgba(0,0,0,0.60)', border: '1px solid rgba(255,255,255,0.18)' }}
+          >
+            <Maximize2 className="w-3.5 h-3.5 text-white" />
+            <span className="text-[10px] font-semibold text-white/80">Full Screen</span>
+          </motion.button>
         )}
       </AnimatePresence>
     </div>
@@ -227,7 +253,7 @@ export default function ProjectCard({ project, index }: { project: Project; inde
               style={{ background: isEven ? 'linear-gradient(to left,transparent 60%,var(--accent-bg) 100%)' : 'linear-gradient(to right,transparent 60%,var(--accent-bg) 100%)' }}
             />
             {project.video
-              ? <ProjectVideo src={project.video} />
+              ? <ProjectVideo src={project.video} id={project.id} />
               : <ProjectGallery images={project.images} />
             }
           </div>
