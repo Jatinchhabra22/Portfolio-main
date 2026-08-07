@@ -24,13 +24,14 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         setMounted(true);
-        // Check localStorage first, then system preference
         const stored = localStorage.getItem('theme') as Theme | null;
-        if (stored === 'dark' || stored === 'light') {
-            setTheme(stored);
-            document.documentElement.setAttribute('data-theme', stored);
-        } else {
+        if (stored === 'light') {
             setTheme('light');
+            document.documentElement.setAttribute('data-theme', 'light');
+        } else {
+            // Default is always light — clear any stale dark preference
+            setTheme('light');
+            localStorage.removeItem('theme');
             document.documentElement.setAttribute('data-theme', 'light');
         }
     }, []);
