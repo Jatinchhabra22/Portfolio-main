@@ -12,6 +12,8 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   display: "swap",
   weight: ["300", "400", "500", "600", "700", "800", "900"],
+  preload: true,
+  fallback: ["system-ui", "-apple-system", "sans-serif"],
 });
 
 export const metadata: Metadata = {

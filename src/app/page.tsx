@@ -1,15 +1,18 @@
 'use client';
 
-import Hero from '@/components/sections/Hero';
-import About from '@/components/sections/About';
-import Experience from '@/components/sections/Experience';
-import Projects from '@/components/sections/Projects';
-import Contact from '@/components/sections/Contact';
-import Loader from '@/components/Loader';
-import Nav from '@/components/Nav';
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
+import Hero from '@/components/sections/Hero';
+import Loader from '@/components/Loader';
+import Nav from '@/components/Nav';
+
+// Lazy-load below-the-fold sections to reduce initial bundle
+const About = dynamic(() => import('@/components/sections/About'), { ssr: false });
+const Experience = dynamic(() => import('@/components/sections/Experience'), { ssr: false });
+const Projects = dynamic(() => import('@/components/sections/Projects'), { ssr: false });
+const Contact = dynamic(() => import('@/components/sections/Contact'), { ssr: false });
 
 function Footer() {
   const { theme } = useTheme();

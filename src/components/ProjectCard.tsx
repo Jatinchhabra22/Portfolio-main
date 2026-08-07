@@ -1,8 +1,8 @@
 'use client';
 
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { useRef, useState } from 'react';
-import { Github, ChevronRight, ChevronLeft, ArrowUpRight, ExternalLink } from 'lucide-react';
+import { useRef, useState, useCallback } from 'react';
+import { Github, ChevronRight, ChevronLeft, ArrowUpRight, ExternalLink, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import Image from 'next/image';
 import { useTheme } from '@/components/ThemeProvider';
 
@@ -21,22 +21,23 @@ export interface Project {
   live: string;
   useThemeColor: boolean;
   images: string[];
+  video?: string;
 }
 
 function ProjectGallery({ images }: { images: string[] }) {
   const [cur, setCur] = useState(0);
   const [dir, setDir] = useState(0);
-  const next = (e: React.MouseEvent) => { 
+  const next = (e: React.MouseEvent) => {
     if (images.length === 0) return;
-    e.stopPropagation(); 
-    setDir(1); 
-    setCur(p => (p + 1) % images.length); 
+    e.stopPropagation();
+    setDir(1);
+    setCur(p => (p + 1) % images.length);
   };
-  const prev = (e: React.MouseEvent) => { 
+  const prev = (e: React.MouseEvent) => {
     if (images.length === 0) return;
-    e.stopPropagation(); 
-    setDir(-1); 
-    setCur(p => (p - 1 + images.length) % images.length); 
+    e.stopPropagation();
+    setDir(-1);
+    setCur(p => (p - 1 + images.length) % images.length);
   };
 
   if (images.length === 0) {
@@ -59,7 +60,7 @@ function ProjectGallery({ images }: { images: string[] }) {
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0">
           <Image src={images[cur]} alt={`Screenshot ${cur + 1}`} fill className="object-contain"
-            sizes="(max-width: 768px) 100vw, 50vw" priority={cur === 0} />
+            sizes="(max-width: 768px) 100vw, 50vw" priority={false} loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
         </motion.div>
       </AnimatePresence>
@@ -82,6 +83,111 @@ function ProjectGallery({ images }: { images: string[] }) {
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+function ProjectVideo({ src }: { src: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [showControls, setShowControls] = useState(false);
+
+  const togglePlay = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play(); setPlaying(true); }
+    else { v.pause(); setPlaying(false); }
+  }, []);
+
+  const toggleMute = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+  }, []);
+
+  return (
+    <div
+      className="relative w-full h-full group/video overflow-hidden"
+      style={{ background: '#0a0a0a' }}
+      onMouseEnter={() => setShowControls(true)}
+      onMouseLeave={() => setShowControls(false)}
+    >
+      <video
+        ref={videoRef}
+        src={src}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        className="w-full h-full object-contain"
+        onPlay={() => setPlaying(true)}
+        onPause={() => setPlaying(false)}
+      />
+
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+      {/* Centre play/pause button — always visible when paused, fades out when playing */}
+      <AnimatePresence>
+        {(!playing || showControls) && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.2 }}
+            onClick={togglePlay}
+            className="absolute inset-0 flex items-center justify-center z-10"
+            aria-label={playing ? 'Pause' : 'Play'}
+          >
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center backdrop-blur-md transition-transform hover:scale-110"
+              style={{ background: 'rgba(0,0,0,0.55)', border: '1.5px solid rgba(255,255,255,0.25)' }}
+            >
+              {playing
+                ? <Pause className="w-6 h-6 text-white" />
+                : <Play className="w-6 h-6 text-white translate-x-0.5" />
+              }
+            </div>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Bottom controls bar */}
+      <AnimatePresence>
+        {showControls && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.18 }}
+            className="absolute bottom-3 right-3 z-20 flex items-center gap-2"
+          >
+            {/* Mute toggle */}
+            <button
+              onClick={toggleMute}
+              aria-label={muted ? 'Unmute' : 'Mute'}
+              className="w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-transform hover:scale-110"
+              style={{ background: 'rgba(0,0,0,0.55)', border: '1.5px solid rgba(255,255,255,0.18)' }}
+            >
+              {muted
+                ? <VolumeX className="w-3.5 h-3.5 text-white" />
+                : <Volume2 className="w-3.5 h-3.5 text-white" />
+              }
+            </button>
+            {/* Status badge */}
+            <div
+              className="px-2.5 py-1 rounded-full text-[10px] font-bold text-white/60 backdrop-blur-md"
+              style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              {playing ? '▶ Playing' : '⏸ Paused'}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -115,12 +221,15 @@ export default function ProjectCard({ project, index }: { project: Project; inde
         />
 
         <div className={`grid grid-cols-1 lg:grid-cols-2 gap-0`}>
-          {/* Image */}
-          <div className={`relative aspect-[16/10] lg:aspect-auto overflow-hidden ${isEven ? 'lg:order-2' : 'lg:order-1'}`} style={{ minHeight: '300px' }}>
+          {/* Image / Video */}
+          <div className={`relative aspect-[16/10] lg:aspect-auto overflow-hidden ${isEven ? 'lg:order-2' : 'lg:order-1'}`} style={{ minHeight: '380px', background: 'var(--video-bg, #0a0a0a)' }}>
             <div className="absolute inset-0 z-10 pointer-events-none"
               style={{ background: isEven ? 'linear-gradient(to left,transparent 60%,var(--accent-bg) 100%)' : 'linear-gradient(to right,transparent 60%,var(--accent-bg) 100%)' }}
             />
-            <ProjectGallery images={project.images} />
+            {project.video
+              ? <ProjectVideo src={project.video} />
+              : <ProjectGallery images={project.images} />
+            }
           </div>
 
           {/* Content */}

@@ -8,7 +8,23 @@ import ProjectCard, { Project } from '@/components/ProjectCard';
 
 export const featuredProjects: Project[] = [
   {
-    id: 'pharma', index: '01',
+    id: 'insightai', index: '01',
+    title: 'InsightAI',
+    subtitle: 'Decision Intelligence Platform',
+    tagline: 'ML Studio · AI Copilot · Forecasting · RAG',
+    description: 'A unified enterprise-grade decision intelligence platform that transforms raw datasets into instant, data-grounded answers. Combines an ML training studio, Prophet/AutoARIMA forecasting, RAG-powered AI Copilot (Ollama + ChromaDB), natural-language SQL queries, and AI-generated PDF reports — all in one workspace.',
+    problem: 'Teams drown in BI dashboards and stale reports but still can\'t answer "why did churn spike?" or "will we hit Q3 revenue?" without manual digging.',
+    solution: 'Full-stack ML platform: upload data → auto-profile → train models → forecast → interrogate with natural-language AI Copilot — zero data science degree needed.',
+    features: ['ML Studio (XGBoost, LightGBM, CatBoost, SHAP)', 'AI Copilot with RAG over your datasets', 'Prophet & AutoARIMA time-series forecasting', 'Natural-language → SQL query engine', 'AI-generated PDF reports', 'Model registry with versioned REST predictions'],
+    tech: ['FastAPI', 'Python', 'React', 'LLMs', 'RAG', 'ChromaDB', 'PostgreSQL', 'Ollama'],
+    github: 'https://github.com/Jatinchhabra22/InsightAI-',
+    live: '',
+    useThemeColor: true,
+    images: [],
+    video: '/projects/InsightAI.mp4',
+  },
+  {
+    id: 'pharma', index: '02',
     title: 'AI Pharma Decision System',
     subtitle: 'Predictive Intelligence for Healthcare',
     tagline: 'ML-Powered Pharmaceutical Decision Making',
@@ -23,7 +39,7 @@ export const featuredProjects: Project[] = [
     images: ['/projects/pharma-1.png', '/projects/pharma-2.png', '/projects/pharma-3.png', '/projects/pharma-4.png', '/projects/pharma-5.png', '/projects/pharma-6.png', '/projects/pharma-7.png', '/projects/pharma-8.png', '/projects/pharma-9.png', '/projects/pharma-11.png', '/projects/pharma-12.png', '/projects/pharma-13.png'],
   },
   {
-    id: 'neersetu', index: '02',
+    id: 'neersetu', index: '03',
     title: 'NeerSetu',
     subtitle: 'Smart Community Health System',
     tagline: 'Water Quality Monitoring & AI Health Risk Prediction',
@@ -38,7 +54,7 @@ export const featuredProjects: Project[] = [
     images: ['/projects/Neersetu 1.png', '/projects/Neersetu 2.png'],
   },
   {
-    id: 'orderflow', index: '03',
+    id: 'orderflow', index: '04',
     title: 'OrderFlow',
     subtitle: 'E-Commerce Analytics Platform',
     tagline: 'End-to-End Sales & Operations Intelligence',
@@ -52,21 +68,6 @@ export const featuredProjects: Project[] = [
     useThemeColor: true,
     images: ['/projects/orderflow-1.png', '/projects/orderflow-2.png', '/projects/orderflow-3.png', '/projects/orderflow-4.png', '/projects/orderflow-5.png'],
   },
-  {
-    id: 'swiggy', index: '04',
-    title: 'Swiggy Analytics',
-    subtitle: 'FoodTech Delivery Intelligence',
-    tagline: 'City & Restaurant-Level Sales Analysis',
-    description: "Deep-dived into Swiggy's delivery ecosystem to uncover demand patterns, top-performing restaurants, and city-level growth opportunities. Combined SQL querying with Power BI storytelling to deliver actionable insights for business expansion.",
-    problem: 'No visibility into which cities, cuisines, or restaurants drive the most value.',
-    solution: 'SQL-powered analytics layer surfacing demand patterns and growth levers.',
-    features: ['City-level demand mapping', 'Restaurant performance ranking', 'Cuisine trend analysis', 'SQL query optimization', 'Interactive BI dashboards'],
-    tech: ['Python', 'SQL', 'PostgreSQL', 'Power BI'],
-    github: 'https://github.com/Jatinchhabra22/Swiggy-Food-Delivery-Analytics',
-    live: '',
-    useThemeColor: true,
-    images: ['/projects/swiggy-1.png', '/projects/swiggy-2.png', '/projects/swiggy-3.png', '/projects/swiggy-4.png', '/projects/swiggy-5.png'],
-  }
 ];
 
 export default function Projects() {
