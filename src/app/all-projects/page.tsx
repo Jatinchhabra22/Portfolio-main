@@ -83,7 +83,7 @@ function Footer() {
 const allProjects: Project[] = [
   ...featuredProjects,
   {
-    id: 'swiggy', index: '05',
+    id: 'swiggy', index: '06',
     title: 'Swiggy Analytics',
     subtitle: 'FoodTech Delivery Intelligence',
     tagline: 'City & Restaurant-Level Sales Analysis',
@@ -98,7 +98,7 @@ const allProjects: Project[] = [
     images: ['/projects/swiggy-1.png', '/projects/swiggy-2.png', '/projects/swiggy-3.png', '/projects/swiggy-4.png', '/projects/swiggy-5.png'],
   },
   {
-    id: 'smart-attendance', index: '06',
+    id: 'smart-attendance', index: '07',
     title: 'Smart Attendance & Curriculum App',
     subtitle: 'AI-Powered EdTech Platform',
     tagline: 'Face Recognition Attendance & Task Recommendations',
@@ -113,7 +113,7 @@ const allProjects: Project[] = [
     images: ['/projects/SMART.png'],
   },
   {
-    id: 'ott-analysis', index: '07',
+    id: 'ott-analysis', index: '08',
     title: 'OTT Platform Analysis',
     subtitle: 'Media Content Analytics',
     tagline: 'Netflix, Prime, Disney+ Content Insights',
@@ -128,7 +128,7 @@ const allProjects: Project[] = [
     images: ['/projects/Ott analysis.png'],
   },
   {
-    id: 'novastat', index: '08',
+    id: 'novastat', index: '09',
     title: 'NovaStat',
     subtitle: 'Government Survey Platform',
     tagline: 'Survey Data Processing & Reporting',
@@ -143,7 +143,7 @@ const allProjects: Project[] = [
     images: ['/projects/NovastatAI.png'],
   },
   {
-    id: 'upi-analysis', index: '09',
+    id: 'upi-analysis', index: '10',
     title: 'UPI Transaction Analysis',
     subtitle: 'Financial Payments Analytics',
     tagline: 'UPI Payment Pattern Insights',
@@ -158,7 +158,7 @@ const allProjects: Project[] = [
     images: ['/projects/Upi analysis.png'],
   },
   {
-    id: 'lead-crm', index: '10',
+    id: 'lead-crm', index: '11',
     title: 'Lead-to-CRM Automation Platform',
     subtitle: 'Enterprise SaaS Automation',
     tagline: 'AI-Powered Lead Capture, Scoring & CRM Sync',
@@ -174,7 +174,7 @@ const allProjects: Project[] = [
     video: '/projects/Lead-to-Crm.mp4',
   },
   {
-    id: 'invoice-automation', index: '11',
+    id: 'invoice-automation', index: '12',
     title: 'Invoice & Reporting Automation',
     subtitle: 'Full-Stack Finance Platform',
     tagline: 'Invoice Lifecycle · PDF Generation · Scheduled Reports',
@@ -190,7 +190,7 @@ const allProjects: Project[] = [
     video: '/projects/InvoiceFlow.mp4',
   },
   {
-    id: 'agentflow', index: '12',
+    id: 'agentflow', index: '13',
     title: 'AgentFlow — AI Content Agent',
     subtitle: 'Multi-Agent AI Automation',
     tagline: '9-Node LLM Pipeline · Content Generation · SEO · Fact-Check',
@@ -206,7 +206,7 @@ const allProjects: Project[] = [
     video: '/projects/AI Content & Automation Agent.mp4',
   },
   {
-    id: 'docuflow', index: '13',
+    id: 'docuflow', index: '14',
     title: 'DocuFlow — Document Processing',
     subtitle: 'Intelligent Document Processing',
     tagline: 'OCR · AI Extraction · Validation Workflows',
@@ -222,7 +222,7 @@ const allProjects: Project[] = [
     video: '/projects/Document Processing Automation.mp4',
   },
   {
-    id: 'rag-chatbot', index: '14',
+    id: 'rag-chatbot', index: '15',
     title: 'RAG Support Chatbot',
     subtitle: 'Enterprise AI Knowledge Assistant',
     tagline: 'RAG · Vector Search · Citations · Multi-Source Ingestion',
@@ -238,7 +238,7 @@ const allProjects: Project[] = [
     video: '/projects/RAG-based Support Chatbot.mp4',
   },
   {
-    id: 'social-autoposter', index: '15',
+    id: 'social-autoposter', index: '16',
     title: 'Social Media Auto-Poster',
     subtitle: 'Multi-Platform Publishing Automation',
     tagline: 'Schedule Once · Publish Everywhere · 8 Platforms',
@@ -254,7 +254,7 @@ const allProjects: Project[] = [
     video: '/projects/Social-Media-Auto-Poster.mp4',
   },
   {
-    id: 'nexora', index: '16',
+    id: 'nexora', index: '17',
     title: 'Nexora — Fashion E-Commerce',
     subtitle: 'Luxury Fashion Storefront',
     tagline: 'Mouse Spotlight Hero · Full Catalog · Checkout Flow',
@@ -270,7 +270,7 @@ const allProjects: Project[] = [
     video: '/projects/nexora.mp4',
   },
   {
-    id: 'elevare', index: '17',
+    id: 'elevare', index: '18',
     title: 'Elevare Estates',
     subtitle: 'Luxury Real Estate Platform',
     tagline: 'Cinematic Hero Video · Property Portfolio · GSAP Animations',
@@ -286,7 +286,7 @@ const allProjects: Project[] = [
     video: '/projects/real estate.mp4',
   },
   {
-    id: 'orbital', index: '18',
+    id: 'orbital', index: '19',
     title: 'Orbital Automation',
     subtitle: 'Enterprise AI Marketing Site',
     tagline: 'Scroll-Scrubbed Video · 3D Elements · Glass Editorial Design',
@@ -302,7 +302,7 @@ const allProjects: Project[] = [
     video: '/projects/industrial.mp4',
   },
   {
-    id: 'aetherai', index: '19',
+    id: 'aetherai', index: '20',
     title: 'AetherAI — AI SaaS Website',
     subtitle: 'AI Product Marketing Site',
     tagline: 'Full Landing Page · Dashboard UI · AI Agent Flow Visualisation',
@@ -318,7 +318,7 @@ const allProjects: Project[] = [
     video: '/projects/AetherAI.mp4',
   },
   {
-    id: 'minimo', index: '20',
+    id: 'minimo', index: '21',
     title: 'MINIMO™ — Kids Streetwear',
     subtitle: 'Premium Kids Fashion Marketplace',
     tagline: 'Flying Cart Animation · 100 Products · Admin Dashboard',
